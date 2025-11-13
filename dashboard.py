@@ -4,11 +4,12 @@ import pandas as pd
 import joblib
 
 # === Carregar modelo ===
-dados = joblib.load("MLP/modelos/MultiLayerPerceptron_NaoLinear/modelo_RM_nlinear_v1_16.33.pkl")
+dados = joblib.load("MLP/modelos/MultiLayerPerceptron_NaoLinear/modelo_RM_nlinear_v1_17.02.pkl")
 modelo = dados['modelo']
 scaler_variaveis = dados['scaler_variavel']
 scaler_target = dados['scaler_target']
 mape = dados['MAPE']
+colunas = dados['colunas']
 
 st.title("Simulador")
 st.subheader("Modelo: Multi Layer Perceptron - Rede Neural")
@@ -47,20 +48,22 @@ mapa_tipo_loja = {
 if st.button("Estimar"):
     entrada = pd.DataFrame({
         "Anos de Atividade": [anos],
-        "Potencial de consumo médio por domicílio": [potencialMedioDomicilio],
-        "Potencial de Consumo Total": [potencialConsumoTotal],
-        "PEA Dia": [peaDia],
-        "Trabalhadores": [trabalhadores],
-        "População Mulheres": [mulheres],
-        "Renda média domiciliar": [rendaMediaDomiciliar],
-        "Densidade demográfica": [densidadeDemografica],
         "População": [populacao],
-        "População Homens": [homens],
-        "    Superior completo": [superiorCompleto],
-        "Domicílios por faixa de moradores": [domiciliosPorFaixaMoradores],
         "Fluxo de Passantes": [fluxoPassantes],
+        "Densidade demográfica": [densidadeDemografica],
+        "Renda média domiciliar": [rendaMediaDomiciliar],
+        "PEA Dia": [peaDia],
+        "    Superior completo": [superiorCompleto],
+        "Potencial de Consumo Total": [potencialConsumoTotal],
+        "Potencial de consumo médio por domicílio": [potencialMedioDomicilio],
+        "População Homens": [homens],
+        "População Mulheres": [mulheres],
+        "Domicílios por faixa de moradores": [domiciliosPorFaixaMoradores],
+        "Trabalhadores": [trabalhadores],
         "tipo_loja_encoder": [mapa_tipo_loja.get(tipoLoja, None)],
     })
+
+    print(colunas)
 
     entrada_scaled = scaler_variaveis.transform(entrada)
     previsao = modelo.predict(entrada_scaled)
